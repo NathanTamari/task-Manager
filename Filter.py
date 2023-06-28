@@ -23,7 +23,8 @@ class Filter:
 
         return array
 
-    def comparestrings(self, string1, string2):
+    @staticmethod
+    def comparestrings(string1, string2):
         # returns the string that comes first in alphabetical order
 
         if len(string1) > len(string2):
@@ -35,15 +36,25 @@ class Filter:
 
         count = 0
         for char in range(len(smallerstring)):
-            if ord(smallerstring[count:count + 1]) < ord(largerstring[count:count + 1]):
+            # makes sure capital letters aren't ranked higher than lowercase (by default ASCII ranks like that
+            val1 = ord(smallerstring[count:count + 1])
+            val2 = ord(largerstring[count:count + 1])
+            if val1 > 90:
+                val1 -= 32
+            if val2 > 90:
+                val2 -= 32
+
+            # statement comparing values previously adjusted
+            if val1 < val2:
                 return smallerstring
-            elif ord(largerstring[count:count + 1]) < ord(smallerstring[count:count + 1]):
+            elif val2 < val1:
                 return largerstring
             else:
                 count += 1
         return smallerstring
 
-    def printall(self, array):
+    @staticmethod
+    def printall(array):
         print('')
         for i in array:
             print(i.getname())

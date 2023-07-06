@@ -53,8 +53,76 @@ class Filter:
                 count += 1
         return smallerstring
 
+    def sortDueDate(self,array):
+
+        counter = 1
+        while counter > 0:
+            counter = 0
+            # when counter is 0, the array is in the right order, and while loop ends
+            index = 0
+            for currentTask in array:
+                if index + 1 != len(array):
+                    if self.earlierDate(array[index], array[index + 1]):
+                        index += 1
+                    else:
+                        temp = currentTask
+                        array[index] = array[index + 1]
+                        array[index + 1] = temp
+                        index += 1
+                        counter += 1
+                # put string at current index and next index into comparestrings. if it returns current index,
+                # you are good
+
+        return array
+
     @staticmethod
     def printall(array):
         print('')
         for i in array:
             print(i.getname())
+
+    def earlierDate(self, task1, task2):
+        # returns true if the first task has an earlier due date than the second task
+        year1 = int(task1.get_year())
+        year2 = int(task2.get_year())
+        month1 = self.monthToInt(task1.get_month())
+        month2 = self.monthToInt(task2.get_month())
+        day1 = int(task1.get_day())
+        day2 = int(task2.get_day())
+
+        if year1 < year2:
+            return True
+        elif month1 < month2:
+            return True
+        elif day1 < day2:
+            return True
+        elif day1 == day2:
+            return True
+        else:
+            return False
+
+    def monthToInt(self, month):
+        if month == 'January':
+            return 1
+        if month == 'February':
+            return 2
+        if month == 'March':
+            return 3
+        if month == 'April':
+            return 4
+        if month == 'May':
+            return 5
+        if month == 'June':
+            return 6
+        if month == 'July':
+            return 7
+        if month == 'August':
+            return 8
+        if month == 'September':
+            return 9
+        if month == 'October':
+            return 10
+        if month == 'November':
+            return 11
+        else:
+            return 12

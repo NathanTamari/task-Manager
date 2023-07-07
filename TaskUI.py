@@ -4,14 +4,26 @@
 #################################################
 
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from tkinter.ttk import OptionMenu
 from Filter import Filter
-from TaskWindow import TaskWindow
+from Task import Task
 
 
 class TaskUI:
     def __init__(self):
+        self.date_text = None
+        self.task_window = None
+        self.priority_drop_menu = None
+        self.month_choice = None
+        self.month_choice_menu = None
+        self.day_choice_menu = None
+        self.year_choice_menu = None
+        self.day_choice = None
+        self.priorityText = None
+        self.priority_choices = None
+        self.year_choice = None
+        self.priorityVal = None
         self.desc_field = None
         self.name_field = None
         self.blank = None
@@ -29,7 +41,7 @@ class TaskUI:
         self.button_fg_color = "#FFFFFF"  # White
         self.text_bg_color = "#95F9E3"  #
 
-        # setup of TKinter Stuff
+        # setup of TKinter main window
         self.root = tk.Tk()
         self.root.geometry('1920x1080')
         self.root.title('taskManager')
@@ -37,73 +49,70 @@ class TaskUI:
         self.mainframe.pack(fill='both', expand=True)
 
         # random tasks, delete
-        # self.taskArray.append(Task("Goodbye", "bye", 3, 'January', '4', '2023'))
-        # self.taskArray.append(Task("Bot march172024", "man bot", 2, 'March', '17', '2024'))
-        # self.taskArray.append(Task("bot ZZ", "zz bot", 3, 'January', '4', '2023'))
-        # self.taskArray.append(Task("Afirst one", "it better be", 1, 'January', '17', '2023'))
-        # self.taskArray.append(Task("DJ KHALED", "we the best", 4, 'January', '16', '2023'))
-        # self.taskArray.append(Task("may152024", "we h", 2, 'may', '15', '2024'))
-        # self.taskArray.append(Task("dfwd", "we h", 4, 'January', '14', '2023'))
-        # self.taskArray.append(Task("fger", "we h", 4, 'January', '9', '2023'))
-        # self.taskArray.append(Task("dfe", "we h", 2, 'January', '8', '2023'))
-        # self.taskArray.append(Task("asasas", "we h", 1, 'January', '7', '2023'))
-        # self.taskArray.append(Task("fort", "we h", 2, 'January', '6', '2023'))
-        # self.taskArray.append(Task("night", "we h", 2, 'January', '5', '2023'))
-        # self.taskArray.append(Task("fork", "we h", 2, 'January', '4', '2023'))
-        # self.taskArray.append(Task("april 2024", "we h", 2, 'April', '1', '2024'))
-        # self.taskArray.append(Task("tswi", "we h", 2, 'January', '2', '2023'))
-        # self.taskArray.append(Task("agr", "we h", 2, 'January', '1', '2023'))
+        self.taskArray.append(Task("JANUARY42023", "bye", 3, 'January', '4', '2023'))
+        self.taskArray.append(Task("march172024", "man bot", 2, 'March', '17', '2024'))
+        self.taskArray.append(Task("JANUARY42023", "zz bot", 3, 'January', '4', '2023'))
+        self.taskArray.append(Task("JANUARY172023", "it better be", 1, 'January', '17', '2023'))
+        self.taskArray.append(Task("JANUARY162023", "we the best", 4, 'January', '16', '2023'))
+        self.taskArray.append(Task("may152024", "we h", 2, 'May', '15', '2024'))
+        self.taskArray.append(Task("JANUARY142023", "we h", 4, 'January', '14', '2023'))
+        self.taskArray.append(Task("JANUARY62023", "we h", 2, 'January', '6', '2023'))
+        self.taskArray.append(Task("JANUARY52023", "we h", 2, 'January', '5', '2023'))
+        self.taskArray.append(Task("DECEMBER42023", "we h", 2, 'December', '4', '2023'))
+        self.taskArray.append(Task("april12024", "we h", 2, 'April', '1', '2024'))
+        self.taskArray.append(Task("JAN22023", "we h", 2, 'January', '2', '2023'))
+        self.taskArray.append(Task("MARCH92026", "we h", 2, 'March', '9', '2026'))
+
         # Fills home page with current tasks
         self.printlist()
         self.root.mainloop()
         return
 
-    def sortbycommand(self):
+    def sort_alphabetically(self):  # triggered when user enters to sort alphabetically
         filter = Filter()
         self.taskArray = filter.sortAlpha(self.taskArray)
         self.removealltext()
         self.printlist()
         return
 
-    def sortduedate(self):
+    def sort_due_date(self):  # triggered when user enters to sort by due date
         filter = Filter()
         self.taskArray = filter.sortDueDate(self.taskArray)
         self.removealltext()
         self.printlist()
 
-    def printlist(self):
-
+    def printlist(self):  # organizes the task menu by whatever order the array is in
         style = ttk.Style()
         style.theme_use('default')
         style.configure('TButton', background=self.button_bg_color, foreground=self.button_fg_color,
                         width=20, borderwidth=1, focusthickness=3)
-        style.map('TButton', background=[('active', self.button_bg_color)])
+        style.map('TButton', background=[('active', 'blue')])
         style.configure('TLabel', background=self.text_bg_color, foreground=self.text_color,
                         font=('Source Sans Pro', 20))
 
+        # place is used instead of grid because the sort by and search buttons should stay in the same place for easier
+        # usability
         self.text = ttk.Label(self.mainframe, text=' ' * 4 + "Task List:", font=('Source Sans Pro', 30))
-        self.text.place(x=100, y=50)
-
-        self.blank = ttk.Label(self.mainframe, text=' ', font=('Source Sans Pro', 30))
-        self.blank.grid(row=0, column=0, pady=50)
-
+        self.blank = ttk.Label(self.mainframe, text=' ', font=('Source Sans Pro', 20))
         sort_by_button = ttk.Button(self.mainframe, text='Sort By', style='TButton')
-        sort_by_button.place(x=1005, y=20)
-        # sort_by_button.grid(row=0, column=4, pady=5, padx=(300, 0))
+        add_task_button = ttk.Button(self.mainframe, text="Add Task", style='TButton', command=self.enterTasks)
+        search_button = ttk.Button(self.mainframe, text='Search', style='TButton')
         sort_by_button.config(command=self.sort_by)
 
-        add_task_button = ttk.Button(self.mainframe, text="Add Task", style='TButton', command=self.enterTasks)
+        self.text.place(x=100, y=50)
+        self.blank.grid(row=0, column=0, pady=50)
+        sort_by_button.place(x=1005, y=20)
         add_task_button.place(x=0, y=575, width=1550, height=325)
-        # add_task_button.grid(row=13, column=4, padx=5, pady=(0, 30))
-        # add_task_button.grid(sticky='NWES')
-
-        search_button = ttk.Button(self.mainframe, text='Search', style='TButton')
         search_button.place(x=1200, y=20)
-        # search_button.grid(row=0, column=5, pady=5)
 
         counter = 0
-
         for task in self.taskArray:
+            # if there is no due date, sets text to a blank string
+            if task.get_year() == '' or task.get_month() == '' or task.get_day() == '':
+                due_date_text = ''
+            else:
+                due_date_text = f'Due:  {task.get_month()} {task.get_day()}, {task.get_year()}.'
+
             # makes sure that there are 4 separate rows of tasks
             if 15 <= counter < 20:
                 columnnum = -30
@@ -115,29 +124,31 @@ class TaskUI:
 
             elif 4 < counter < 10:
                 columnnum = -10
-                rowchanger = 2
+                rowchanger = 3
 
             else:
                 columnnum = 0
                 rowchanger = 0
 
+            # Creates the task menu: sets name, description, and how high priority it is
             self.text = ttk.Label(self.mainframe, text=task.getname(), style='TLabel')
-            self.text.grid(row=2 + rowchanger, column=(counter * 2) + columnnum, pady=15, padx=(30, 10))
             self.descText = ttk.Label(self.mainframe, text=task.getdesc(), font=("Montserrat", 15))
-            self.descText.grid(row=3 + rowchanger, column=(counter * 2) + columnnum, pady=(0, 30))
             self.priorityText = ttk.Label(self.mainframe, text='!' * int(task.get_priority()), foreground='red')
-            self.priorityText.grid(row=2 + rowchanger, column=(counter * 2) + columnnum + 1)
+            self.date_text = ttk.Label(self.mainframe, text=due_date_text, font=("Montserrat", 15))
 
-            counter += 1
+            self.text.grid(row=3 + rowchanger, column=(counter * 2) + columnnum, pady=(45,20), padx=(30, 10))
+            self.descText.grid(row=4 + rowchanger, column=(counter * 2) + columnnum, pady=(0, 30))
+            self.priorityText.grid(row=3 + rowchanger, column=(counter * 2) + columnnum + 1, pady=(25,0))
+            self.date_text.grid(row=4 + rowchanger, column=(counter * 2) + columnnum, pady=(30,0))
 
-    def removealltext(self):
+            counter += 1  # iterates
+
+    def removealltext(self):  # When sort is called, this method removes the previous organized text
         for widget in self.mainframe.winfo_children():
             widget.destroy()
 
-    def enterTasks(self):
-        new_window = TaskWindow(self.taskArray)
-        self.printlist()
-    def sort_by(self):
+    def sort_by(self):  # created 'self.clicked', which stores which sort is used, and doesn't sort until choose_sort is
+        # called.
         self.clicked = tk.StringVar()
         self.drop_menu = OptionMenu(self.root, self.clicked, "Alphabetically", "Alphabetically", "Priority", "Due Date",
                                     "Status")
@@ -145,14 +156,93 @@ class TaskUI:
         self.sort_button = ttk.Button(self.mainframe, text="Sort", command=self.choose_sort, style='TButton')
         self.sort_button.place(x=1200, y=60)
 
-    def choose_sort(self):
+    def choose_sort(self):  # removes sort by buttons and calls whichever sorting method is selected by the user
         self.sort_button.destroy()
         self.drop_menu.destroy()
 
         if self.clicked.get() == 'Alphabetically':
-            self.sortbycommand()
+            self.sort_alphabetically()
         if self.clicked.get() == 'Due Date':
-            self.sortduedate()
+            self.sort_due_date()
+
+    def enterTasks(self):  # creates task-entering window and "enter task" button
+        self.task_window = tk.Toplevel(self.root, bg=self.background_color)
+        self.task_window.geometry('750x300')
+        self.task_window.title('Enter Tasks')
+        self.setupOptions(self.task_window)  # passes the window to the next method
+
+        enter_task_button = ttk.Button(self.task_window, text="Enter Task", style='TButton', command=self.close_window)
+        enter_task_button.grid(row=6, column=0, sticky='nwes', columnspan=4)
+
+    def setupOptions(self, window):  # sets up labels and selection windows for data entry
+        l1 = ttk.Label(window, text='Task Name', font=('Source Sans Pro', 25), foreground=self.button_bg_color)
+        l2 = ttk.Label(window, text='Task Description', font=('Source Sans Pro', 25),
+                       foreground=self.button_bg_color)
+        l3 = ttk.Label(window, text='Priority', font=('Source Sans Pro', 25), foreground=self.button_bg_color)
+        l4 = ttk.Label(window, text='Due Date', font=('Source Sans Pro', 25), foreground=self.button_bg_color)
+        l1.grid(row=0, column=0, padx=5, pady=5)
+        l2.grid(row=1, column=0, padx=5, pady=5)
+        l3.grid(row=2, column=0, padx=5, pady=5)
+        l4.grid(row=3, column=0, padx=5, pady=5)
+
+        self.name_field = ttk.Entry(window, font=('Source Sans Pro', 20))
+        self.desc_field = ttk.Entry(window, font=('Source Sans Pro', 20))
+
+        # Creates and places OptionMenus for priority, due date
+        self.priority_choices = tk.StringVar()
+        self.priority_drop_menu = OptionMenu(window, self.priority_choices, "!", "!", "!!", "!!!", "!!!!")
+
+        self.month_choice = tk.StringVar()
+        self.month_choice.set('')
+        self.month_choice_menu = OptionMenu(window, self.month_choice, self.month_choice.get(), 'January', 'February',
+                                            'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
+                                            'November', 'December')
+        self.day_choice = tk.StringVar()
+        self.day_choice.set('')
+        self.day_choice_menu = OptionMenu(window, self.day_choice, self.day_choice.get(), *range(1,32))
+
+        self.year_choice = tk.StringVar()
+        self.year_choice.set('')
+        self.year_choice_menu = OptionMenu(window, self.year_choice, self.year_choice.get(), '2023', '2024', '2025',
+                                           '2026','2027')
+
+        # places all Option Menus in the grid
+        self.name_field.grid(row=0, column=1, sticky='nwes', columnspan=3, padx=10, pady=15)
+        self.desc_field.grid(row=1, column=1, sticky='nwes', columnspan=3, padx=10, pady=15)
+        self.priority_drop_menu.grid(row=2, column=1, sticky='ew', columnspan=3)
+        self.month_choice_menu.grid(row=3, column=1, sticky='ew')
+        self.day_choice_menu.grid(row=3, column=2, sticky='ew')
+        self.year_choice_menu.grid(row=3, column=3, sticky='ew')
+
+    def close_window(self):  # If the task has a name, task is added to the array, and the window closes
+        self.setPriority()
+        self.realDate()
+        if self.name_field.get() == '':
+            messagebox.showinfo(title='', message='Please enter a task name.')
+        else:
+            self.taskArray.append(Task(self.name_field.get(), self.desc_field.get(), self.priorityVal,
+                                       self.month_choice.get(), self.day_choice.get(), self.year_choice.get()))
+            self.task_window.destroy()
+            self.printlist()
+
+    def setPriority(self):  # assigns a numerical value to however many '!'s there are
+        if self.priority_choices.get() == "!!!!":
+            self.priorityVal = 4
+        elif self.priority_choices.get() == "!!!":
+            self.priorityVal = 3
+        elif self.priority_choices.get() == "!!":
+            self.priorityVal = 2
+        else:
+            self.priorityVal = 1
+
+    def realDate(self):  # Makes sure the date is real (no February 31st for example)
+        if self.month_choice.get() in ['February', 'April', 'June', 'September', 'November']:
+            if self.day_choice.get() == '31':
+                self.day_choice.set('30')
+        if self.day_choice.get() == '30' and self.month_choice.get() == 'February':
+            self.day_choice.set('28')
+        if self.day_choice.get() == '29' and self.month_choice.get() == 'February' and self.year_choice.get() != "2024":
+            self.day_choice.set('28')
 
 
 if __name__ == '__main__':

@@ -1,5 +1,6 @@
 class Filter:
     def __init__(self):
+        self.null_array = None
         print('')
 
     def sortAlpha(self, array):
@@ -53,7 +54,14 @@ class Filter:
                 count += 1
         return smallerstring
 
-    def sortDueDate(self,array):
+    def sortDueDate(self, array):  # takes initial array, returns array sorted by which due date is soonest
+
+        null_array = []
+
+        for i in array:  # removes all tasks with empty due dates and puts them in another array
+            if i.get_year() == '' or i.get_month() == '' or i.get_day() == '':
+                null_array.append(i)
+                array.remove(i)
 
         counter = 1
         while counter > 0:
@@ -73,16 +81,23 @@ class Filter:
                 # put string at current index and next index into comparestrings. if it returns current index,
                 # you are good
 
+        for i in null_array:
+            array.append(i)
         return array
 
     @staticmethod
-    def printall(array):
+    def printall(array):  # delete this just for tesring
         print('')
         for i in array:
             print(i.getname())
 
-    def earlierDate(self, task1, task2):
-        # returns true if the first task has an earlier due date than the second task
+    def earlierDate(self, task1, task2):  # returns true if the first task has an earlier due date than the second task
+
+        if task1.get_year() == '' or task1.get_month() == '' or task1.get_day() == '':
+            return False
+        if task2.get_year() == '' or task2.get_month() == '' or task2.get_day() == '':
+            return True
+
         year1 = int(task1.get_year())
         year2 = int(task2.get_year())
         month1 = self.monthToInt(task1.get_month())
@@ -92,16 +107,29 @@ class Filter:
 
         if year1 < year2:
             return True
+
+        elif year2 < year1:
+            return False
+
         elif month1 < month2:
             return True
+
+        elif month2 < month1:
+            return False
+
         elif day1 < day2:
             return True
+
+        elif day2 < day1:
+            return False
+
         elif day1 == day2:
             return True
+
         else:
             return False
 
-    def monthToInt(self, month):
+    def monthToInt(self, month):  # converts Month of
         if month == 'January':
             return 1
         if month == 'February':
@@ -124,5 +152,5 @@ class Filter:
             return 10
         if month == 'November':
             return 11
-        else:
+        if month == 'December':
             return 12

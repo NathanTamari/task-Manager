@@ -154,3 +154,22 @@ class Filter:
             return 11
         if month == 'December':
             return 12
+
+    @staticmethod
+    def sort_priority(array):
+        counter = 1
+        while counter > 0:
+            counter = 0
+            # when counter is 0, the array is in the right order, and while loop ends
+            index = 0
+            for currentTask in array:
+                if index + 1 != len(array):
+                    if array[index].get_priority() >= array[index+1].get_priority():
+                        index += 1
+                    else:
+                        temp = currentTask
+                        array[index] = array[index + 1]
+                        array[index + 1] = temp
+                        index += 1
+                        counter += 1
+        return array

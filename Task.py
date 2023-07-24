@@ -8,7 +8,7 @@ class Task:
         self.year = year
         self.priority = priority
         # It is presumed that when a task is being added, it is not yet completed
-        self.status = 'False'
+        self.status = False
 
     def getname(self):
         return self.name

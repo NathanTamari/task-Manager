@@ -4,7 +4,6 @@ from tkinter.ttk import OptionMenu
 from Filter import Filter
 from Task import Task
 
-
 class TaskUI:
     def __init__(self):
         self.drop_menu = None

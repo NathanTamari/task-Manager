@@ -189,4 +189,3 @@ class Filter:
                         index += 1
                         counter += 1
         return array
-    

@@ -1,8 +1,3 @@
-#################################################
-# Author: Nathan Tamari
-# Purpose:
-#################################################
-
 import tkinter as tk
 from tkinter import ttk, messagebox, simpledialog
 from tkinter.ttk import OptionMenu

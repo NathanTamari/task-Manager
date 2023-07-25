@@ -85,12 +85,6 @@ class Filter:
             array.append(i)
         return array
 
-    @staticmethod
-    def printall(array):  # delete this just for tesring
-        print('')
-        for i in array:
-            print(i.getname())
-
     def earlierDate(self, task1, task2):  # returns true if the first task has an earlier due date than the second task
 
         if task1.get_year() == '' or task1.get_month() == '' or task1.get_day() == '':
@@ -155,6 +149,28 @@ class Filter:
         if month == 'December':
             return 12
 
+    def sort_by_status(self, array):
+        counter = 1
+        while counter > 0:
+            counter = 0
+            # when counter is 0, the array is in the right order, and while loop ends
+            index = 0
+            for currentTask in array:
+                if index + 1 != len(array):
+                    if not array[index].get_status() and not array[index + 1].get_status():
+                        index += 1
+                    elif array[index].get_status() and array[index + 1].get_status():
+                        index += 1
+                    elif not array[index].get_status() and array[index + 1].get_status():
+                        index += 1
+                    else:
+                        temp = currentTask
+                        array[index] = array[index + 1]
+                        array[index + 1] = temp
+                        index += 1
+                        counter += 1
+        return array
+
     @staticmethod
     def sort_priority(array):
         counter = 1
@@ -164,7 +180,7 @@ class Filter:
             index = 0
             for currentTask in array:
                 if index + 1 != len(array):
-                    if array[index].get_priority() >= array[index+1].get_priority():
+                    if array[index].get_priority() >= array[index + 1].get_priority():
                         index += 1
                     else:
                         temp = currentTask
@@ -173,3 +189,4 @@ class Filter:
                         index += 1
                         counter += 1
         return array
+    
